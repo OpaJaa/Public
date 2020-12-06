@@ -438,6 +438,9 @@ class Userinterface:
         # The text field is cleared of any previous texts
         self.clear_text()
 
+        # The door selections are cleared
+        self.clear_selected_doors()
+
         # The method is called to get the chosen cards
         card_dict = self.get_checked_cards()
 
@@ -697,6 +700,9 @@ class Userinterface:
         # A variable for error popup information
         information1 = "Valitse YKSI ovikoodi!"
 
+        # A variable to use, if there are no cards with access to the door
+        no_cards = "Kenelläkään ei ole pääsyä tälle ovelle."
+
         # If there are no doors chosen, a method for error popup is called
         if len(door_dict) != 1:
             self.error_popup(headline, information1)
@@ -711,14 +717,19 @@ class Userinterface:
                         info_list.append(card_info.info())
                         # And the checkbuttons of those cards are activated
                         self.__selected_cards[card].set(1)
-            # A loop to join the information in the list to a string
-            for info in info_list:
-                output = ", ".join(info)
-                # And the string is printed to the text field with two empty
-                # lines after the text
-                self.__text_field.insert(END, output)
-                self.__text_field.insert(END, "\n")
-                self.__text_field.insert(END, "\n")
+            # If no one has access, a text is shown
+            if not info_list:
+                self.__text_field.insert(END, no_cards)
+            # And if someone has access, all this happens
+            else:
+                # A loop to join the information in the list to a string
+                for info in info_list:
+                    output = ", ".join(info)
+                    # And the string is printed to the text field with two
+                    # empty lines after the text
+                    self.__text_field.insert(END, output)
+                    self.__text_field.insert(END, "\n")
+                    self.__text_field.insert(END, "\n")
 
     def error_popup(self, headline, information):
         """
@@ -920,8 +931,6 @@ class Accesscard:
         """
         Method to check if the access card has a access to a provided door.
         Returns a boolean value accordingly.
-
-        This method is not yet used in the GUI version.
 
         :param door: str, the door code of the door that is being accessed.
         :return: True: The door opens for this access card.
