@@ -83,7 +83,7 @@ User can:
           wants to replace the file.
         - The file is saved in the same csv -format and can be opened later.
     - Exit the programme.
-        - To exit the programme the user can click the menubar "File" and
+        - To exit the programme the user can click the menubar "Tiedosto" and
         then from the menu click "Lopeta Ohjelma".
     - Read the user manual.
         - To read the manual, the user clicks "Apua" from the menubar and
@@ -227,12 +227,6 @@ class Userinterface:
         self.__card_label = Label(self.__mainwindow,
                                   text="Avainkortit",
                                   font="Verdana 14 bold")
-        # A list of the card checkbuttons
-        self.__card_checkbox_list = []
-        # A dictionary that is used to store the values of the checkbuttons
-        self.__selected_cards = {}
-        # A method is called to loop through the access cards
-        self.loop_for_cards()
 
         # Buttons are created for the different methods the user can use
         self.__button_labels = Label(self.__mainwindow,
@@ -305,6 +299,23 @@ class Userinterface:
         self.__clear_selected_cards.grid(row=16, column=0, sticky=W)
         self.__clear_selected_doors.grid(row=2, column=2, sticky=W)
 
+        # Declaring the dictionary of access cards as global
+        global ACCESSCARDS
+        # Function call to read the file containing the access information and
+        # storing the returned dictionary in a variable
+        ACCESSCARDS = read_file("accessinfo.txt")
+
+        # A list of the card checkbuttons
+        self.__card_checkbox_list = []
+        # A dictionary that is used to store the values of the checkbuttons
+        self.__selected_cards = {}
+        if ACCESSCARDS:
+            # A method is called to loop through the access cards
+            self.loop_for_cards()
+        else:
+            information = "Tiedostoa ei voitu lukea!"
+            self.__text_field.insert(END, information)
+
     def start(self):
         """
         Starts the mainloop.
@@ -322,6 +333,8 @@ class Userinterface:
         A method to create the checkbuttons for the access cards
         """
 
+        # The text field is cleared
+        self.clear_text()
         # First the list containing the checkbuttons is cleared
         for card in self.__card_checkbox_list:
             card.destroy()
@@ -508,6 +521,7 @@ class Userinterface:
         # If there are no chose cards, the error popup method is called
         if len(card_dict) == 0:
             self.error_popup(headline, information1)
+            return
         # And the same for doors, with corresponding information
         elif len(door_dict) == 0:
             if len(area_dict) != 0:
@@ -519,6 +533,7 @@ class Userinterface:
                         card.add_access(area)
             else:
                 self.error_popup(headline, information2)
+                return
 
         else:
             # A loop to iterate through the chosen cards
@@ -535,6 +550,8 @@ class Userinterface:
                 else:
                     for area in area_dict:
                         card.add_access(area)
+        # Information in the text field is updated
+        self.access_info()
 
     def remove_doors(self):
         """
@@ -555,6 +572,7 @@ class Userinterface:
         # If there are no chose cards, the error popup method is called
         if len(card_dict) == 0:
             self.error_popup(headline, information1)
+            return
         # And the same for doors, with corresponding information
         elif len(door_dict) == 0:
             if len(area_dict) != 0:
@@ -567,6 +585,7 @@ class Userinterface:
                         card.remove_access(area)
             else:
                 self.error_popup(headline, information2)
+                return
 
         else:
             # A loop to iterate through the chosen cards
@@ -579,6 +598,9 @@ class Userinterface:
                 if len(area_dict) != 0:
                     for area in area_dict:
                         card.remove_access(area)
+
+        # Information in the text field is updated
+        self.access_info()
 
     def merge_cards(self):
         """
@@ -603,6 +625,7 @@ class Userinterface:
         # If there are more or less cards than 2, error popup method is called
         if len(card_dict) != 2:
             self.error_popup(headline, information)
+            return
 
         else:
             # The two cards in the list are assigned to variables
@@ -615,6 +638,9 @@ class Userinterface:
             # And the cards are merged together using their methods
             card1.merge(card2)
             card2.merge(card1)
+
+        # Information in the text field is updated
+        self.access_info()
 
     def add_card(self):
         """
@@ -1073,22 +1099,12 @@ def read_file(filename):
 
     # If there is any kind of problems reading the file, an error is raised
     except Exception:
-        Headline = "Virhe"
-        Information = "Tiedostoa ei voitu lukea!"
-        Userinterface.error_popup(Userinterface, Headline, Information)
-        return
+        return {}
     # The created dictionary is returned
     return obj_dict
 
 
 def main():
-
-    # Declaring the dictionary of access cards as global
-    global ACCESSCARDS
-
-    # Function call to read the file containing the access information and
-    # storing the returned dictionary in a variable
-    ACCESSCARDS = read_file("accessinfo.txt")
 
     # Create an object of the class Userinterface
     ui = Userinterface()
