@@ -1,7 +1,6 @@
-987654;Ella Electronicsresearcher;ELT,G,SM112
-123456;Ted Technologystudent;G
-999;Cliff Cleaner;M
-KK-23;Fiona Fired Employee;
-777;Thelma Teacher;TIE,OPET,TE113
-888;Pricilla Professor;TIE,TC114,TC210,TE102
-007;Research Team X;SM112,TE117,X
+9876;Elton Elektron;ELT,G,SM112
+1234;Thomas Student;G
+999;Clifford Cleaner;G
+231;Tina Teacher;TIE,OPET,TE113
+888;Priona Professor;TIE,TC114,TC210,TE102
+007;James Obligation;SM112,TE117,X
