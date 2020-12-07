@@ -704,9 +704,9 @@ class Userinterface:
                     # And the method is called to refresh the card checkbuttons
                     self.loop_for_cards()
 
-                # And the selections are cleared so they won't "haunt"
-                self.clear_selected_cards()
-                
+        # And the selections are cleared so they won't "haunt"
+        self.clear_selected_cards()
+
     def who_has_access(self):
         """
         A method to print those cards to the text box who have access to
